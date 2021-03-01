@@ -1,0 +1,4 @@
+#ifndef MYTINYSTL_ITERATOR_H_
+#define MYTINYSTL_ITERATOR_H_
+
+#endif
