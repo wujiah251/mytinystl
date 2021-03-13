@@ -5,10 +5,10 @@
 
 #include <iostream>
 
-#include "iterator.h"
-#include "memory.h"
-#include "exceptdef.h"
-#include "functional.h"
+#include "base/iterator.h"
+#include "base/memory.h"
+#include "base/exceptdef.h"
+#include "base/functional.h"
 
 namespace mystl
 {
