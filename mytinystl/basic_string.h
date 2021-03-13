@@ -7,6 +7,7 @@
 
 #include "iterator.h"
 #include "allocator.h"
+#inlclude "memory.h"
 #include "exceptdef.h"
 #include "functional.h"
 
@@ -1178,21 +1179,106 @@ namespace mystl
         return tmp;
     }
     // string + string(右值)
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(const basic_string<CharType, CharTraits> &lhs, basic_string<CharType, CharTraits> &&rhs)
+    {
+        basic_string<CharType, CharTraits> tmp(mystl::move(rhs));
+        tmp.insert(tmp.begin(), lhs.begin(), lhs.end());
+        return tmp;
+    }
     // string(右值)+string(右值)
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(basic_string<CharType, CharTraits> &&lhs,
+              basic_string<CharType, CharTraits> &&rhs)
+    {
+        basic_string<CharType, CharTraits> tmp(mystl::move(lhs));
+        tmp.append(rhs);
+        return tmp;
+    }
     // c_string+string(右值)
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(const CharType *lhs, basic_string<CharType, CharTraits> &&rhs)
+    {
+        basic_string<CharType, CharTraits> tmp(lhs);
+        tmp.append(rhs);
+        return tmp;
+    }
     // char+string（右值）
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(CharType ch, basic_string<CharType, CharTraits> &&rhs)
+    {
+        basic_string<CharType, CharTraits> tmp(ch);
+        tmp.append(rhs);
+        return tmp;
+    }
     // string（右值）+ c_string
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(basic_string<CharType, CharTraits> &&lhs, const CharType *rhs)
+    {
+        basic_string<CharType, CharTraits> tmp(mystl::move(lhs));
+        tmp.append(rhs);
+        return tmp;
+    }
     // string（右值）+ char
+    template <class CharType, class CharTraits>
+    basic_string<CharType, CharTraits>
+    operator+(basic_string<CharType, CharTraits> &&lhs, CharType ch)
+    {
+        basic_string<CharType, CharTraits> tmp(mystl::move(lhs));
+        tmp.append(1, ch);
+        return tmp;
+    }
     /*****************************************************************************/
     // 重载operator==
     // string==string
+    template <class CharType, class CharTraits>
+    bool operator==(const basic_string<CharType, CharTraits> &lhs,
+                    const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.size() == rhs.size() && lhs.compare(rhs) == 0;
+    }
     // string!=string
+    template <class CharType, class CharTraits>
+    bool operator!=(const basic_string<CharType, CharTraits> &lhs,
+                    const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.size() != rhs.size() || lhs.compare(rhs) != 0;
+    }
     /*****************************************************************************/
     // 重载operator<、>、<=、>=
     // string < string
+    template <class CharType, class CharTraits>
+    bool operator<(const basic_string<CharType, CharTraits> &lhs,
+                   const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.compare(rhs) < 0;
+    }
     // string <= string
+    template <class CharType, class CharTraits>
+    bool operator<=(const basic_string<CharType, CharTraits> &lhs,
+                    const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.compare(rhs) <= 0;
+    }
     // string > string
+    template <class CharType, class CharTraits>
+    bool operator>(const basic_string<CharType, CharTraits> &lhs,
+                   const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.compare(rhs) > 0;
+    }
     // string >= string
+    template <class CharType, class CharTraits>
+    bool operator>=(const basic_string<CharType, CharTraits> &lhs,
+                    const basic_string<CharType, CharTraits> &rhs)
+    {
+        return lhs.compare(rhs) >= 0;
+    }
     /****************************************************************************/
     // 重载mystl的swap
     template <class CharType, class CharTraits>
