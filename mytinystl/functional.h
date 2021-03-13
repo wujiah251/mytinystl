@@ -19,7 +19,7 @@ namespace mystl
     template <class T>
     struct hash<T *>
     {
-        size_t operator()(T *p) cosnt noexcept
+        size_t operator()(T *p) const noexcept
         {
             return reinterpret_cast<size_t>(p);
         }

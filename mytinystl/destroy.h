@@ -8,15 +8,21 @@
 namespace mystl
 {
     template <typename T>
-    void destroy(T *ptr)
+    void destroy_one(T *, std::true_type) {}
+
+    template <class T>
+    void destroy_one(T *pointer, std::false_type)
     {
-        // 先判断是否是普通可破坏类型
-        if (is_trivially_destructible<int>::value)
-            return;
-        if (ptr != nullptr)
+        if (pointer != nullptr)
         {
-            ptr->~T();
+            pointer->~Ty();
         }
+    }
+
+    template <class T>
+    void destroy(T *pointer)
+    {
+        destroy_one(pointer, std::is_trivially_destructible<T>{});
     }
     /*应该先完成迭代器类
     template <typename T>

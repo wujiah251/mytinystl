@@ -5,6 +5,9 @@
 
 #include <new>
 
+#include "type_traits.h"
+#include "iterator.h"
+
 namespace mystl
 {
     template <typename T>

@@ -6,8 +6,7 @@
 #include <iostream>
 
 #include "iterator.h"
-#include "allocator.h"
-#inlclude "memory.h"
+#include "memory.h"
 #include "exceptdef.h"
 #include "functional.h"
 
@@ -27,7 +26,7 @@ namespace mystl
             size_t len = 0;
             for (; *str != char_type(0); ++str)
                 ++len;
-            return res;
+            return len;
         }
         // 字符串比较，比较长度限制为n
         // 小于返回-1，大于返回1，相等返回0
@@ -65,7 +64,7 @@ namespace mystl
             {
                 dst += n;
                 src += n;
-                for (; n != 0; --n, )
+                for (; n != 0; --n)
                     *(--dst) = *(--src);
             }
             return res;
@@ -74,191 +73,9 @@ namespace mystl
         static pointer fill(pointer dst, char_type ch, size_type count) noexcept
         {
             pointer res = dst;
-            for (; cout > 0; --count, ++dst)
+            for (; count > 0; --count, ++dst)
                 *dst = ch;
             return res;
-        }
-    };
-    template <>
-    struct char_traits<char>
-    {
-        typedef char char_type;
-
-        static size_t length(const char_type *str) noexcept
-        {
-            return std::strlen(str);
-        }
-
-        static int compare(const char_type *s1, const char_type *s2, size_t n) noexcept
-        {
-            return std::memcmp(s1, s2, n);
-        }
-
-        static char_type *copy(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            MYSTL_DEBUG(src + n <= dst || dst + n <= src);
-            return static_cast<char_type *>(std::memcpy(dst, src, n));
-        }
-
-        static char_type *move(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            return static_cast<char_type *>(std::memmove(dst, src, n));
-        }
-
-        static char_type *fill(char_type *dst, char_type ch, size_t count) noexcept
-        {
-            return static_cast<char_type *>(std::memset(dst, ch, count));
-        }
-    };
-    template <>
-    struct char_traits<wchar_t>
-    {
-        typedef wchar_t char_type;
-
-        static size_t length(const char_type *str) noexcept
-        {
-            return std::wcslen(str);
-        }
-
-        static int compare(const char_type *s1, const char_type *s2, size_t n) noexcept
-        {
-            return std::wmemcmp(s1, s2, n);
-        }
-
-        static char_type *copy(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            MYSTL_DEBUG(src + n <= dst || dst + n <= src);
-            return static_cast<char_type *>(std::wmemcpy(dst, src, n));
-        }
-
-        static char_type *move(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            return static_cast<char_type *>(std::wmemmove(dst, src, n));
-        }
-
-        static char_type *fill(char_type *dst, char_type ch, size_t count) noexcept
-        {
-            return static_cast<char_type *>(std::wmemset(dst, ch, count));
-        }
-    };
-    template <>
-    struct char_traits<char16_t>
-    {
-        typedef char16_t char_type;
-
-        static size_t length(const char_type *str) noexcept
-        {
-            size_t len = 0;
-            for (; *str != char_type(0); ++str)
-                ++len;
-            return len;
-        }
-
-        static int compare(const char_type *s1, const char_type *s2, size_t n) noexcept
-        {
-            for (; n != 0; --n, ++s1, ++s2)
-            {
-                if (*s1 < *s2)
-                    return -1;
-                if (*s2 < *s1)
-                    return 1;
-            }
-            return 0;
-        }
-
-        static char_type *copy(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            MYSTL_DEBUG(src + n <= dst || dst + n <= src);
-            char_type *r = dst;
-            for (; n != 0; --n, ++dst, ++src)
-                *dst = *src;
-            return r;
-        }
-
-        static char_type *move(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            char_type *r = dst;
-            if (dst < src)
-            {
-                for (; n != 0; --n, ++dst, ++src)
-                    *dst = *src;
-            }
-            else if (src < dst)
-            {
-                dst += n;
-                src += n;
-                for (; n != 0; --n)
-                    *--dst = *--src;
-            }
-            return r;
-        }
-
-        static char_type *fill(char_type *dst, char_type ch, size_t count) noexcept
-        {
-            char_type *r = dst;
-            for (; count > 0; --count, ++dst)
-                *dst = ch;
-            return r;
-        }
-    };
-    template <>
-    struct char_traits<char32_t>
-    {
-        typedef char32_t char_type;
-
-        static size_t length(const char_type *str) noexcept
-        {
-            size_t len = 0;
-            for (; *str != char_type(0); ++str)
-                ++len;
-            return len;
-        }
-
-        static int compare(const char_type *s1, const char_type *s2, size_t n) noexcept
-        {
-            for (; n != 0; --n, ++s1, ++s2)
-            {
-                if (*s1 < *s2)
-                    return -1;
-                if (*s2 < *s1)
-                    return 1;
-            }
-            return 0;
-        }
-
-        static char_type *copy(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            MYSTL_DEBUG(src + n <= dst || dst + n <= src);
-            char_type *r = dst;
-            for (; n != 0; --n, ++dst, ++src)
-                *dst = *src;
-            return r;
-        }
-
-        static char_type *move(char_type *dst, const char_type *src, size_t n) noexcept
-        {
-            char_type *r = dst;
-            if (dst < src)
-            {
-                for (; n != 0; --n, ++dst, ++src)
-                    *dst = *src;
-            }
-            else if (src < dst)
-            {
-                dst += n;
-                src += n;
-                for (; n != 0; --n)
-                    *--dst = *--src;
-            }
-            return r;
-        }
-
-        static char_type *fill(char_type *dst, char_type ch, size_t count) noexcept
-        {
-            char_type *r = dst;
-            for (; count > 0; --count, ++dst)
-                *dst = ch;
-            return r;
         }
     };
 
@@ -282,7 +99,7 @@ namespace mystl
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
         typedef typename allocator_type::size_type size_type;
-        typedef typename allocator_type::different_type difference_type;
+        typedef typename allocator_type::difference_type difference_type;
 
         typedef value_type *iterator;
         typedef const value_type *const_iterator;
@@ -294,7 +111,7 @@ namespace mystl
         // 没搞懂这两个函数是干啥用的
         static_assert(std::is_pod<CharType>::value,
                       "Character type of basic_string must be a POD");
-        static_assert(std::is_pod<CharType, typename traits_type::char_type>::value,
+        static_assert(std::is_same<CharType, typename traits_type::char_type>::value,
                       "CharType must be same as traits_type::char_type");
 
     public:
@@ -464,18 +281,6 @@ namespace mystl
                 *(buffer_ + n) = value_type();
             return *(buffer_ + n);
         }
-        reference at(size_type n)
-        {
-            THROW_OUT_OF_RANGE_IF(n >= size_, "basic_string<Char, Traits>::at()"
-                                              "subscript out of range");
-            return (*this)[n];
-        }
-        const_reference at(size_type n)
-        {
-            THROW_OUT_OF_RANGE_IF(n >= size_, "basic_string<Char, Traits>::at()"
-                                              "subscript out of range");
-            return (*this)[n];
-        }
         reference front()
         {
             MYSTL_DEBUG(!empty());
@@ -592,7 +397,7 @@ namespace mystl
             delete[] buf;
             return is;
         }
-        friend std::istream &operator>>(std::istream &os, basic_string &str)
+        friend std::ostream &operator<<(std::ostream &os, basic_string &str)
         {
             for (size_type i = 0; i < str.size_; ++i)
                 os << *(str.buffer_ + i);
@@ -659,7 +464,7 @@ namespace mystl
     basic_string<CharType, CharTraits>::
     operator=(const_pointer str)
     {
-        aconst size_type len = char_traits::length(str);
+        const size_type len = char_traits::length(str);
         if (capacity_ < len)
         {
             auto new_buffer_ = data_allocator::allocate(len + 1);
@@ -679,7 +484,7 @@ namespace mystl
     {
         if (capacity_ < 1)
         {
-            auto new_buffer_ = data_allocator::allocate(2);
+            auto new_buffer = data_allocator::allocate(2);
             data_allocator::deallocate(buffer_);
             buffer_ = new_buffer;
             capacity_ = 2;
@@ -724,27 +529,6 @@ namespace mystl
         size_ += count;
         return r;
     }
-    // reallocate_and_fill 函数
-    // 在pos的位置插入n给ch字符
-    template <class CharType, class CharTraits>
-    typename basic_string<CharType, CharTraits>::iterator
-    basic_string<CharType, CharTraits>::
-        reallocate_and_fill(iterator pos, size_type n, value_type ch)
-    {
-        const auto r = pos - buffer_;
-        const auto old_cap = capacity_;
-        const auto new_cap = mystl::max(old_cap + n, old_cap + (old_cap >> 1));
-        auto new_buffer = data_allocator::allocate(new_cap);
-        auto e1 = char_traits::move(new_buffer, buffer_, r) + r;
-        auto e2 = char_traits::fill(e1, ch, n) + n;
-        char_traits::move(e2, buffer_ + r, size_ - r);
-        char_allocator::deallocate(buffer_, old_cap);
-        buffer_ = new_buffer;
-        size_ += n;
-        capacity_ = new_cap;
-        return buffer_ + r;
-    }
-
     // append，在末尾添加n个字符ch
     template <class CharType, class CharTraits>
     basic_string<CharType, CharTraits> &
@@ -880,7 +664,7 @@ namespace mystl
     template <class CharType, class CharTraits>
     typename basic_string<CharType, CharTraits>::size_type
     basic_string<CharType, CharTraits>::
-        find(value_type ch, size_type pos = 0) const noexcept
+        find(value_type ch, size_type pos) const noexcept
     {
         for (auto i = pos; i < size_; ++i)
         {
@@ -893,7 +677,7 @@ namespace mystl
     template <class CharType, class CharTraits>
     typename basic_string<CharType, CharTraits>::size_type
     basic_string<CharType, CharTraits>::
-        find(const basic_string &str, size_type pos = 0) const noexcept
+        find(const basic_string &str, size_type pos) const noexcept
     {
         const size_type count = str.size_;
         if (count == 0)
@@ -906,7 +690,7 @@ namespace mystl
             if (*(buffer_ + i) == str.front())
             {
                 size_type j = 1;
-                for (; j < len; ++j)
+                for (; j < count; ++j)
                 {
                     if (*(buffer_ + i + j) != str[j])
                         break;
@@ -921,7 +705,7 @@ namespace mystl
     template <class CharType, class CharTraits>
     typename basic_string<CharType, CharTraits>::size_type
     basic_string<CharType, CharTraits>::
-        rfind(value_type ch, size_type pos = 0) const noexcept
+        rfind(value_type ch, size_type pos) const noexcept
     {
         if (pos >= size_)
             pos = size_ - 1;
@@ -936,7 +720,7 @@ namespace mystl
     template <class CharType, class CharTraits>
     typename basic_string<CharType, CharTraits>::size_type
     basic_string<CharType, CharTraits>::
-        rfind(const basic_string &str, size_type npos = 0) const noexcept
+        rfind(const basic_string &str, size_type pos) const noexcept
     {
         const size_type count = str.size_;
         if (pos >= size_)
@@ -985,7 +769,7 @@ namespace mystl
     // fill_init：用字符ch来初始化
     template <class CharType, class CharTraits>
     void basic_string<CharType, CharTraits>::
-        try_init() noexcept
+        fill_init(size_type n, value_type ch)
     {
 
         const auto init_size = mystl::max(static_cast<size_type>(STRING_INIT_SIZE), n + 1);
@@ -1092,7 +876,7 @@ namespace mystl
         auto e1 = char_traits::move(new_buffer, buffer_, r) + r;
         auto e2 = char_traits::fill(e1, ch, n) + n;
         char_traits::move(e2, buffer_ + r, size_ - r);
-        data_allocator::deallocate(buffer_m, old_cap);
+        data_allocator::deallocate(buffer_, old_cap);
         buffer_ = new_buffer;
         size_ += n;
         capacity_ = new_cap;
@@ -1147,7 +931,7 @@ namespace mystl
     basic_string<CharType, CharTraits>
     operator+(CharType ch, const basic_string<CharType, CharTraits> &rhs)
     {
-        basic_string(CharType, CharTraits) tmp(1, ch);
+        basic_string<CharType, CharTraits> tmp(1, ch);
         tmp.append(rhs);
         return tmp;
     }
@@ -1156,7 +940,7 @@ namespace mystl
     basic_string<CharType, CharTraits>
     operator+(const basic_string<CharType, CharTraits> &lhs, const CharType *rhs)
     {
-        basic_string<Char, Traits> tmp(lhs);
+        basic_string<CharType, CharTraits> tmp(lhs);
         tmp.append(rhs);
         return tmp;
     }
@@ -1165,7 +949,7 @@ namespace mystl
     basic_string<CharType, CharTraits>
     operator+(const basic_string<CharType, CharTraits> &lhs, CharType ch)
     {
-        basic_string<Char, Traits> tmp(lhs);
+        basic_string<CharType, CharTraits> tmp(lhs);
         tmp.append(1, ch);
         return tmp;
     }
@@ -1174,7 +958,7 @@ namespace mystl
     basic_string<CharType, CharTraits>
     operator+(basic_string<CharType, CharTraits> &&lhs, const basic_string<CharType, CharTraits> &rhs)
     {
-        basic_string<Char, Traits> tmp(mystl::move(lhs));
+        basic_string<CharType, CharTraits> tmp(mystl::move(lhs));
         tmp.append(rhs);
         return tmp;
     }
@@ -1285,7 +1069,7 @@ namespace mystl
     void swap(basic_string<CharType, CharTraits> &lhs,
               basic_string<CharType, CharTraits> &rhs) noexcept
     {
-        lsh.swap(rhs);
+        lhs.swap(rhs);
     }
     // 特化mystl的hash
     template <class CharType, class CharTraits>

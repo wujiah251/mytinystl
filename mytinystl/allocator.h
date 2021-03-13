@@ -70,7 +70,7 @@ namespace mystl
     template <typename T>
     void allocator<T>::construct(T *ptr, const T &value)
     {
-        mystl::consruct(ptr, value);
+        mystl::construct(ptr, value);
     }
     template <typename T>
     void allocator<T>::construct(T *ptr, T &&value)
